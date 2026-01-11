@@ -1,10 +1,71 @@
-<h1> Lusitania Schizo Blog<h1>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<title>Finance Calculator</title>
+<body>
 
-<ol>
-  <li><a href="finances.html">Finances</a></li>
-  <li><a href="conspiracy.html">Conspiracy</a></li>
-  <li><a href="silver.html">Silver</a></li>
-  <li><a href="feudalism.html">Techno-Fedualism</a></li>
-</ol> 
+  <h1>Finance Calculator</h1>
 
-<p>In contruction...</p>
+  <form action="/action_page.php">
+    <label for="numYears">Number of Years:</label>
+    <input type="number" id="numYears" name="numYears">
+
+    <label for="interest">Interest:</label>
+    <input type="number" id="interest" name="interest">
+
+    <label for="initial">Initial Amount:</label>
+    <input type="number" id="initial" name="initial">
+
+    <label for="reinforce">Additonal Contribution:</label>
+    <input type="number" id="reinforce" name="reinforce">
+
+    <input type="button" onclick="calculatePlot()" value="Calculate!">
+
+  </form>
+
+  <div id="plotWealthPerYears" style="width:100%;max-width:700px"></div>
+
+<script>
+function calculatePlot(){
+  const xArray = [];
+  const yArray = [];
+
+  // const numYears = 40;
+  // const incrementYears = 1;
+  // const interest = 5;
+  // const initial = 100000;
+  // const reinforce = 1000;
+
+  const numYears = document.getElementById("numYears").value;
+  const incrementYears = 1;
+  const interest = document.getElementById("interest").value;
+  const initial = document.getElementById("initial").value;
+  const reinforce = document.getElementById("reinforce").value;
+
+  let i = 0;
+  while(i<=numYears){
+    const wealth = initial*Math.pow(1+interest/100, i) + reinforce* (Math.pow(1+interest/100, i)-1)/(interest/100);
+    xArray.push(i);
+    yArray.push(wealth);
+    i++;
+  }
+  // Define Data
+  const data = [{
+    x: xArray,
+    y: yArray,
+    mode:"lines"
+  }];
+
+  // Define Layout
+  const layout = {
+    xaxis: {range: [xArray[0], xArray[xArray.length-1]], title: "Years"},
+    yaxis: {range: [yArray[0], yArray[yArray.length-1]], title: "$"},  
+    title: "Wealth By Year"
+  };
+
+  // Display using Plotly
+  Plotly.newPlot("plotWealthPerYears", data, layout);
+}
+</script>
+
+</body>
+</html>
